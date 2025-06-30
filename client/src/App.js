@@ -1,13 +1,9 @@
+// App.js
 import React from "react";
-import PingButton from "./PingButton";
+import TasksContainer from "./containers/TasksContainer";
 
 function App() {
-  return (
-    <div>
-      <h1>Task Manager</h1>
-      <PingButton />
-    </div>
-  );
+  return <TasksContainer />;
 }
 
 export default App;
