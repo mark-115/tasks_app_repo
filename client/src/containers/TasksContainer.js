@@ -1,30 +1,50 @@
-// containers/TasksContainer.js
-import React from "react";
-import { Container, Header, Table } from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import { Container, Header, Table, Button } from "semantic-ui-react";
 import TaskRow from "../components/TaskRow";
-
-const mockTasks = [
-  {
-    id: 1,
-    title: "Finish API",
-    description: "Complete Express routes and test",
-    dueDate: "2025-07-01",
-    status: "pending",
-  },
-  {
-    id: 2,
-    title: "Finish Client",
-    description: "Info on client code",
-    dueDate: "2025-07-02",
-    status: "in_progress",
-  },
-];
+import CreateTaskModal from "../components/CreateTaskModal";
+import axios from "axios";
 
 export default function TasksContainer() {
+  const [tasks, setTasks] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+    status: "pending",
+  });
+
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/tasks").then((res) => {
+      setTasks(res.data);
+    });
+  }, []);
+
+  const handleCreate = async () => {
+    try {
+      const res = await axios.post("http://localhost:4000/api/tasks", newTask);
+      setTasks([...tasks, res.data]);
+      setNewTask({
+        title: "",
+        description: "",
+        dueDate: "",
+        status: "pending",
+      });
+      setModalOpen(false);
+    } catch (err) {
+      console.error("Failed to create task:", err);
+    }
+  };
+
   return (
     <Container style={{ marginTop: "2em" }}>
       <Header as="h2">Task List</Header>
-      <Table celled>
+
+      <Button primary onClick={() => setModalOpen(true)}>
+        + Create Task
+      </Button>
+
+      <Table celled style={{ marginTop: "1em" }}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Title</Table.HeaderCell>
@@ -35,11 +55,19 @@ export default function TasksContainer() {
         </Table.Header>
 
         <Table.Body>
-          {mockTasks.map((task) => (
+          {tasks?.map((task) => (
             <TaskRow key={task.id} task={task} />
           ))}
         </Table.Body>
       </Table>
+
+      <CreateTaskModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onCreate={handleCreate}
+        task={newTask}
+        setTask={setNewTask}
+      />
     </Container>
   );
 }
