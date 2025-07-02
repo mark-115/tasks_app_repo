@@ -22,15 +22,25 @@ export default function TasksContainer() {
     status: "pending",
   });
 
+  const API_BASE =
+    window.location.hostname === "localhost"
+      ? "http://localhost:4000"
+      : "http://api:4000";
+
   useEffect(() => {
-    axios.get("/api/tasks").then((res) => {
-      setTasks(res.data);
-    });
+    axios
+      .get(`${API_BASE}/api/tasks`)
+      .then((res) => {
+        setTasks(res.data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch tasks:", err.message);
+      });
   }, []);
 
   const handleCreate = async () => {
     try {
-      const res = await axios.post("http://api:4000/api/tasks", newTask);
+      const res = await axios.post(`${API_BASE}/api/tasks`, newTask);
       setTasks([...tasks, res.data]);
       setNewTask({
         title: "",
@@ -52,7 +62,7 @@ export default function TasksContainer() {
   const handleSaveEdit = async () => {
     try {
       const res = await axios.put(
-        `http://api:4000/api/tasks/${taskToEdit.id}`,
+        `${API_BASE}/api/tasks/${taskToEdit.id}`,
         taskToEdit
       );
       setTasks((prev) =>
@@ -66,7 +76,7 @@ export default function TasksContainer() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://api:4000/api/tasks/${id}`);
+      await axios.delete(`${API_BASE}/api/tasks/${id}`);
       setTasks(tasks.filter((task) => task.id !== id));
     } catch (err) {
       console.error("Failed to delete task:", err);
@@ -75,7 +85,7 @@ export default function TasksContainer() {
 
   const handleComplete = async (id) => {
     try {
-      const res = await axios.patch(`http://api:4000/api/tasks/${id}/complete`);
+      const res = await axios.patch(`${API_BASE}/api/tasks/${id}/complete`);
       setTasks(tasks.map((task) => (task.id === id ? res.data : task)));
     } catch (err) {
       console.error("Failed to mark task complete:", err);
