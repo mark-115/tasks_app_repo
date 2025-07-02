@@ -30,7 +30,7 @@ export default function TasksContainer() {
 
   const handleCreate = async () => {
     try {
-      const res = await axios.post("/api/tasks", newTask);
+      const res = await axios.post("http://api:4000/api/tasks", newTask);
       setTasks([...tasks, res.data]);
       setNewTask({
         title: "",
@@ -51,7 +51,10 @@ export default function TasksContainer() {
 
   const handleSaveEdit = async () => {
     try {
-      const res = await axios.put(`/api/tasks/${taskToEdit.id}`, taskToEdit);
+      const res = await axios.put(
+        `http://api:4000/api/tasks/${taskToEdit.id}`,
+        taskToEdit
+      );
       setTasks((prev) =>
         prev.map((t) => (t.id === res.data.id ? res.data : t))
       );
@@ -63,7 +66,7 @@ export default function TasksContainer() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/tasks/${id}`);
+      await axios.delete(`http://api:4000/api/tasks/${id}`);
       setTasks(tasks.filter((task) => task.id !== id));
     } catch (err) {
       console.error("Failed to delete task:", err);
@@ -72,7 +75,7 @@ export default function TasksContainer() {
 
   const handleComplete = async (id) => {
     try {
-      const res = await axios.patch(`/api/tasks/${id}/complete`);
+      const res = await axios.patch(`http://api:4000/api/tasks/${id}/complete`);
       setTasks(tasks.map((task) => (task.id === id ? res.data : task)));
     } catch (err) {
       console.error("Failed to mark task complete:", err);
