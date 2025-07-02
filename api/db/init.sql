@@ -26,12 +26,14 @@ $$;
 
 GRANT ALL PRIVILEGES ON DATABASE tasks_db TO devuser;
 
+CREATE TYPE task_status AS ENUM ('pending', 'completed');
+
 CREATE TABLE IF NOT EXISTS tasks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
   description TEXT,
   due_date TIMESTAMP,
-  status TEXT DEFAULT 'pending',
+  status task_status DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
