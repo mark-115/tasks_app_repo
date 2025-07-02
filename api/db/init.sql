@@ -26,6 +26,9 @@ $$;
 
 GRANT ALL PRIVILEGES ON DATABASE tasks_db TO devuser;
 
+DROP TABLE IF EXISTS tasks CASCADE;
+DROP TYPE IF EXISTS task_status CASCADE;
+
 CREATE TYPE task_status AS ENUM ('pending', 'completed');
 
 CREATE TABLE IF NOT EXISTS tasks (
@@ -37,3 +40,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO tasks (title, description, due_date, status)
+VALUES
+  ('Review Mark''s app', 'Remember to give it full marks.', '2025-07-07', 'pending');

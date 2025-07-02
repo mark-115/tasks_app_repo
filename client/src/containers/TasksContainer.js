@@ -98,35 +98,6 @@ export default function TasksContainer() {
     });
   };
 
-  const getSortedTasks = () => {
-    const keys = Object.keys(sortConfig);
-    if (keys.length === 0) return tasks;
-
-    const sorted = [...tasks];
-
-    keys.forEach((key) => {
-      const direction = sortConfig[key];
-      sorted.sort((a, b) => {
-        const aVal = a[key];
-        const bVal = b[key];
-
-        if (aVal === null) return 1;
-        if (bVal === null) return -1;
-        if (aVal === bVal) return 0;
-
-        return direction === "ascending"
-          ? aVal > bVal
-            ? 1
-            : -1
-          : aVal < bVal
-          ? 1
-          : -1;
-      });
-    });
-
-    return sorted;
-  };
-
   const sortedTasks = React.useMemo(() => {
     if (!sortConfig.key) return tasks;
 
