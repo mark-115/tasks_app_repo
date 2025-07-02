@@ -36,6 +36,15 @@ export default function TasksContainer() {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/tasks/${id}`);
+      setTasks(tasks.filter((task) => task.id !== id));
+    } catch (err) {
+      console.error("Failed to delete task:", err);
+    }
+  };
+
   return (
     <Container style={{ marginTop: "2em" }}>
       <Header as="h2">Task List</Header>
@@ -56,7 +65,7 @@ export default function TasksContainer() {
 
         <Table.Body>
           {tasks?.map((task) => (
-            <TaskRow key={task.id} task={task} />
+            <TaskRow key={task.id} task={task} onDelete={handleDelete} />
           ))}
         </Table.Body>
       </Table>

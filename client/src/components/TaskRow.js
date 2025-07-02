@@ -2,13 +2,13 @@
 import React from "react";
 import { Table, Button } from "semantic-ui-react";
 
-export default function TaskRow({ task }) {
+export default function TaskRow({ task, onDelete }) {
   const handleEdit = () => {
     alert(`Edit task: ${task.id}`);
   };
 
   const handleDelete = () => {
-    alert(`Delete task: ${task.id}`);
+    onDelete(task.id);
   };
 
   return (
