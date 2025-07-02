@@ -19,7 +19,11 @@ export default function TaskRow({ task, onDelete, onComplete, onEdit }) {
     <Table.Row>
       {console.log("TTT", task)}
       <Table.Cell>{task.title}</Table.Cell>
-      <Table.Cell>{new Date(task.due_date).toLocaleDateString()}</Table.Cell>
+      <Table.Cell>
+        {task.due_date
+          ? new Date(task.due_date).toLocaleDateString()
+          : "No due date"}
+      </Table.Cell>
       <Table.Cell>{task.description}</Table.Cell>
       <Table.Cell>{task.status}</Table.Cell>
       <Table.Cell>

@@ -10,6 +10,11 @@ export default function TasksContainer() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
+
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -79,6 +84,67 @@ export default function TasksContainer() {
     }
   };
 
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return {
+          key,
+          direction:
+            prev.direction === "ascending" ? "descending" : "ascending",
+        };
+      } else {
+        return { key, direction: "ascending" };
+      }
+    });
+  };
+
+  const getSortedTasks = () => {
+    const keys = Object.keys(sortConfig);
+    if (keys.length === 0) return tasks;
+
+    const sorted = [...tasks];
+
+    keys.forEach((key) => {
+      const direction = sortConfig[key];
+      sorted.sort((a, b) => {
+        const aVal = a[key];
+        const bVal = b[key];
+
+        if (aVal === null) return 1;
+        if (bVal === null) return -1;
+        if (aVal === bVal) return 0;
+
+        return direction === "ascending"
+          ? aVal > bVal
+            ? 1
+            : -1
+          : aVal < bVal
+          ? 1
+          : -1;
+      });
+    });
+
+    return sorted;
+  };
+
+  const sortedTasks = React.useMemo(() => {
+    if (!sortConfig.key) return tasks;
+
+    return [...tasks].sort((a, b) => {
+      const aVal = a[sortConfig.key];
+      const bVal = b[sortConfig.key];
+
+      if (!aVal) return 1;
+      if (!bVal) return -1;
+
+      if (sortConfig.direction === "ascending") {
+        return aVal > bVal ? 1 : -1;
+      } else {
+        return aVal < bVal ? 1 : -1;
+      }
+    });
+  }, [tasks, sortConfig]);
+
   return (
     <Container style={{ marginTop: "2em" }}>
       <Header as="h2">Task List</Header>
@@ -91,15 +157,27 @@ export default function TasksContainer() {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Title</Table.HeaderCell>
-            <Table.HeaderCell>Due Date</Table.HeaderCell>
+            <Table.HeaderCell>
+              <Button basic onClick={() => handleSort("due_date")}>
+                Due Date{" "}
+                {sortConfig.key === "due_date" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </Button>
+            </Table.HeaderCell>
             <Table.HeaderCell>Description</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
+            <Table.HeaderCell>
+              <Button basic onClick={() => handleSort("status")}>
+                Status{" "}
+                {sortConfig.key === "status" &&
+                  (sortConfig.direction === "ascending" ? "↑" : "↓")}
+              </Button>
+            </Table.HeaderCell>
             <Table.HeaderCell>Actions</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {tasks?.map((task) => (
+          {sortedTasks.map((task) => (
             <TaskRow
               key={task.id}
               task={task}
