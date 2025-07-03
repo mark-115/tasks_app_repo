@@ -90,4 +90,7 @@ Due to time constraints. I was unable to package all this correctly, so apologie
 - **Bulk Delete**:  
   Enable users to select and delete multiple tasks at once to streamline task management.
 
+- **For the reviewers/other developers**:  
+  Should of added more comments within the code, to make it clear what each part is doing, and why certain decisions were made.
+
 ---
