@@ -94,3 +94,29 @@ Due to time constraints. I was unable to package all this correctly, so apologie
   Should of added more comments within the code, to make it clear what each part is doing, and why certain decisions were made.
 
 ---
+
+## Deployment
+
+- **Initial deploy to production**:  
+  For this current version of the application, the frontend (React), backend (Express API), and database (PostgreSQL) would be deployed together using Azure App Service as a monolithic app.
+
+This setup was chosen for:
+
+- Simplicity
+- Ease of development and testing
+- Rapid iteration during the early stages
+
+- **Furute deploy to production**:  
+  Ideally would split Frontend and Backend for better Scalability
+
+Frontend: Azure Static Web Apps
+
+- React (served via global CDN)
+- Auto-deployed via DevOps.
+
+Backend: Azure App Service (Node.js)
+
+- Express API
+- Connected to Azure Database for PostgreSQL
+
+I would aim to deploy the backend as a container to keep everything matching development set up.
